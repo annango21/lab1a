@@ -31,11 +31,11 @@ namespace lab1a.Pages.Movies
        public async Task OnGetAsync()
         {
             // Use LINQ to get list of genres.
-            IQueryable<string> genreQuery = from m in _context.Movie
-                                            orderby m.Genre
-                                            select m.Genre;
+            IQueryable<string> genreQuery = from g in _context.Genres
+                                            orderby g.Name
+                                            select g.Name;
 
-            var movies = from m in _context.Movie
+            var movies = from m in _context.Movie.Include(m => m.Genre)
                         select m;
 
             if (!string.IsNullOrEmpty(SearchString))
@@ -45,7 +45,7 @@ namespace lab1a.Pages.Movies
 
             if (!string.IsNullOrEmpty(MovieGenre))
             {
-                movies = movies.Where(x => x.Genre == MovieGenre);
+                movies = movies.Where(movie => movie.Genre.Name == MovieGenre);
             }
             Genres = new SelectList(await genreQuery.Distinct().ToListAsync());
             Movie = await movies.ToListAsync();

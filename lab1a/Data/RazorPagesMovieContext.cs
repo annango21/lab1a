@@ -1,3 +1,4 @@
+using lab1a.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace lab1a.Data
@@ -11,5 +12,7 @@ namespace lab1a.Data
         }
 
         public DbSet<lab1a.Models.Movie> Movie { get; set; }
+        public DbSet<Genre> Genres { get; set; }
+
     }
 }

@@ -22,10 +22,17 @@ namespace lab1a.Models
     [DataType(DataType.Currency)]
     [Column(TypeName = "decimal(18, 2)")]
     public decimal Price { get; set; }
+   
 
     [RegularExpression(@"^[A-Z]+[a-zA-Z""'\s-]*$")]
     [Required]
     [StringLength(30)]
-    public string Genre { get; set; }
+    // public string Genre { get; set; }
+     public int  GenreId { get; set; }
+
+     //NAVIGATION PROPERTY
+     [ForeignKey("GenreId")]
+     public Genre Genre {get; set;}
     }
+    
 }

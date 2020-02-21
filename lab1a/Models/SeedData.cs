@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using lab1a.Data;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace lab1a.Models
 {
@@ -14,18 +15,35 @@ namespace lab1a.Models
                 serviceProvider.GetRequiredService<
                     DbContextOptions<RazorPagesMovieContext>>()))
             {
-                // Look for any movies.
-                if (context.Movie.Any())
+                
+               if (!context.Genres.Any())
                 {
-                    return;   // DB has been seeded
-                }
+                    context.Genres.AddRange(
+                        new Genre{
+                            Name = "Romantic Comedy"
+                        },
+                        new Genre {
+                            Name = "Comedy"
+                        },
+                        new Genre {
+                            Name = "Western"
+                        }
 
-                context.Movie.AddRange(
+                    );
+                    context.SaveChanges();
+                }
+                //immediately get the new genres into a list
+                //List<Genre>
+                var genres = context.Genres.ToList();
+                 // Look for any movies.
+                if (!context.Movie.Any())
+                {
+                     context.Movie.AddRange(
                     new Movie
                     {
                         Title = "When Harry Met Sally",
                         ReleaseDate = DateTime.Parse("1989-2-12"),
-                        Genre = "Romantic Comedy",
+                        GenreId = genres.Find(g => g.Name == "Romantic Comedy").Id,
                         Price = 7.99M
                     },
 
@@ -33,7 +51,7 @@ namespace lab1a.Models
                     {
                         Title = "Ghostbusters ",
                         ReleaseDate = DateTime.Parse("1984-3-13"),
-                        Genre = "Comedy",
+                        GenreId = genres.Find(g => g.Name == "Comedy").Id,
                         Price = 8.99M
                     },
 
@@ -41,7 +59,7 @@ namespace lab1a.Models
                     {
                         Title = "Ghostbusters 2",
                         ReleaseDate = DateTime.Parse("1986-2-23"),
-                        Genre = "Comedy",
+                        GenreId = genres.Find(g => g.Name == "Comedy").Id,
                         Price = 9.99M
                     },
 
@@ -49,12 +67,14 @@ namespace lab1a.Models
                     {
                         Title = "Rio Bravo",
                         ReleaseDate = DateTime.Parse("1959-4-15"),
-                        Genre = "Western",
+                        GenreId = genres.Find(g => g.Name == "Western").Id,
                         Price = 3.99M
                     }
                 );
                 context.SaveChanges();
+                }
             }
+            
         }
     }
 }
